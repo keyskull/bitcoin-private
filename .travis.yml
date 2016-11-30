@@ -9,19 +9,19 @@ os: linux
 language: generic
 cache:
   directories:
-  - bitcoin/depends/built
-  - bitcoin/depends/sdk-sources
+  - depends/built
+  - depends/sdk-sources
   - $HOME/.ccache
 env:
   global:
     - MAKEJOBS=-j3
     - RUN_TESTS=false
     - CHECK_DOC=0
-    - BOOST_TEST_RANDOM=1$TRAVIS_BUILD_ID/bitcoin
+    - BOOST_TEST_RANDOM=1$TRAVIS_BUILD_ID
     - CCACHE_SIZE=100M
     - CCACHE_TEMPDIR=/tmp/.ccache-temp
     - CCACHE_COMPRESS=1
-    - BASE_OUTDIR=$TRAVIS_BUILD_DIR/bitcoin/out
+    - BASE_OUTDIR=$TRAVIS_BUILD_DIR/out
     - SDK_URL=https://bitcoincore.org/depends-sources/sdks
     - PYTHON_DEBUG=1
     - WINEDEBUG=fixme-all
@@ -42,7 +42,8 @@ env:
     - HOST=x86_64-apple-darwin11 PACKAGES="cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python-dev" BITCOIN_CONFIG="--enable-reduce-exports" OSX_SDK=10.11 GOAL="deploy"
 
 before_install:
-    - cd bitcoin
+    - mv src src1
+    - mv bitcoin/* .
     - export PATH=$(echo $PATH | tr ':' "\n" | sed '/\/opt\/python/d' | tr "\n" ":" | sed "s|::|:|g")
 install:
     - if [ -n "$PPA" ]; then travis_retry sudo add-apt-repository "$PPA" -y; fi
