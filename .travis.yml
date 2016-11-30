@@ -7,7 +7,14 @@ addons:
 
 os: linux
 language: generic
-
+before_cache:
+  - mv src src1
+  - mv -f bitcoin/* .
+cache:
+  directories:
+  - depends/built
+  - depends/sdk-sources
+  - $HOME/.ccache
 env:
   global:
     - MAKEJOBS=-j3
@@ -38,14 +45,7 @@ env:
     - HOST=x86_64-apple-darwin11 PACKAGES="cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python-dev" BITCOIN_CONFIG="--enable-reduce-exports" OSX_SDK=10.11 GOAL="deploy"
 
 before_install:
-    - mv src src1
-    - mv -f bitcoin/* .
     - export PATH=$(echo $PATH | tr ':' "\n" | sed '/\/opt\/python/d' | tr "\n" ":" | sed "s|::|:|g")
-    cache:
-      directories:
-      - depends/built
-      - depends/sdk-sources
-      - $HOME/.ccache
 install:
     - if [ -n "$PPA" ]; then travis_retry sudo add-apt-repository "$PPA" -y; fi
     - if [ -n "$DPKG_ADD_ARCH" ]; then sudo dpkg --add-architecture "$DPKG_ADD_ARCH" ; fi
